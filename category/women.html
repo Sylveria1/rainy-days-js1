@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Rainy Days | Women</title>
+
+    <meta name="description" content="Browse women's Rainy Days jackets." />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+
+  <body data-gender="female">
+    <div class="page-wrapper">
+      <header>
+        <nav class="nav">
+          <a href="../index.html">
+            <img
+              src="../images/RainyDays_Logo.png"
+              class="logo"
+              alt="Rainy Days Logo"
+            />
+          </a>
+
+          <div class="nav-links">
+            <a href="../category/men.html">Men</a>
+            <a href="../category/women.html">Women</a>
+          </div>
+
+          <a href="../checkout/" aria-label="Shopping cart">
+            <svg class="cart-icon" viewBox="0 0 24 24">
+              <path
+                d="M3 3h2l2.5 10h10l2-7H6"
+                stroke="black"
+                stroke-width="2"
+                fill="none"
+              />
+              <circle cx="9" cy="20" r="1.5" fill="black" />
+              <circle cx="17" cy="20" r="1.5" fill="black" />
+            </svg>
+          </a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="featured">
+          <h1>Women's Jackets</h1>
+
+          <div id="loading">Loading products...</div>
+
+          <div id="products-container" class="products-grid"></div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="footer-links">
+          <a href="../terms/">Terms and Conditions</a>
+          <a href="../privacy/">Privacy Policy</a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="../js/category.js"></script>
+  </body>
+</html>
