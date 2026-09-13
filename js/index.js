@@ -5,6 +5,7 @@
 //! ======================================================
 let allProducts = [];
 let selectedGender = "all";
+let cart = [];
 
 //* ====================== CONSTANTS =====================
 const url = "https://v2.api.noroff.dev/rainy-days";
@@ -19,6 +20,31 @@ const filterButtons = document.querySelectorAll(".filter-button");
 //! ======================================================
 //!                     FUNCTIONS
 //! ======================================================
+
+function loadCart() {
+  const savedCart = localStorage.getItem("cart");
+
+  if (savedCart) {
+    cart = JSON.parse(savedCart);
+  }
+}
+
+function addToCart(productToAdd) {
+  const existingProduct = cart.find(
+    (cartItem) => cartItem.id === productToAdd.id,
+  );
+
+  if (existingProduct) {
+    existingProduct.quantity++;
+  } else {
+    cart.push({
+      ...productToAdd,
+      quantity: 1,
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
 
 async function fetchProducts() {
   try {
@@ -49,8 +75,10 @@ function renderProducts(productsToRender) {
   }
 
   productsToRender.forEach((product) => {
+    const productItem = document.createElement("div");
+    productItem.classList.add("product-item");
+
     const productLink = document.createElement("a");
-    productLink.classList.add("product-item");
     productLink.href = `product/index.html?id=${product.id}`;
 
     const card = document.createElement("article");
@@ -70,15 +98,31 @@ function renderProducts(productsToRender) {
     price.classList.add("price");
     price.textContent = `${product.discountedPrice} kr`;
 
+    const addToCartButton = document.createElement("button");
+    addToCartButton.classList.add("btn");
+    addToCartButton.textContent = "Add to Cart";
+
+    addToCartButton.addEventListener("click", () => {
+      addToCart(product);
+
+      addToCartButton.textContent = "Added to Cart";
+
+      setTimeout(() => {
+        addToCartButton.textContent = "Add to Cart";
+      }, 1500);
+    });
+
     imageContainer.appendChild(image);
 
     card.appendChild(imageContainer);
     card.appendChild(title);
+    card.appendChild(price);
 
     productLink.appendChild(card);
-    productLink.appendChild(price);
+    productItem.appendChild(productLink);
+    productItem.appendChild(addToCartButton);
 
-    productsContainer.appendChild(productLink);
+    productsContainer.appendChild(productItem);
   });
 }
 
@@ -117,6 +161,7 @@ filterButtons.forEach((button) => {
 //! ======================================================
 
 async function startApp() {
+  loadCart();
   loading.style.display = "block";
 
   await fetchProducts();

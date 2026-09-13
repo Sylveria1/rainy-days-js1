@@ -4,6 +4,7 @@
 //!                       STATE
 //! ======================================================
 let allProducts = [];
+let cart = [];
 
 //* ====================== CONSTANTS =====================
 const url = "https://v2.api.noroff.dev/rainy-days";
@@ -17,6 +18,31 @@ const loading = document.querySelector("#loading");
 //! ======================================================
 //!                     FUNCTIONS
 //! ======================================================
+
+function loadCart() {
+  const savedCart = localStorage.getItem("cart");
+
+  if (savedCart) {
+    cart = JSON.parse(savedCart);
+  }
+}
+
+function addToCart(productToAdd) {
+  const existingProduct = cart.find(
+    (cartItem) => cartItem.id === productToAdd.id,
+  );
+
+  if (existingProduct) {
+    existingProduct.quantity++;
+  } else {
+    cart.push({
+      ...productToAdd,
+      quantity: 1,
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
 
 async function fetchProducts() {
   try {
@@ -47,8 +73,10 @@ function renderProducts(productsToRender) {
   }
 
   productsToRender.forEach((product) => {
+    const productItem = document.createElement("div");
+    productItem.classList.add("product-item");
+
     const productLink = document.createElement("a");
-    productLink.classList.add("product-item");
     productLink.href = `../product/index.html?id=${product.id}`;
 
     const card = document.createElement("article");
@@ -68,15 +96,32 @@ function renderProducts(productsToRender) {
     price.classList.add("price");
     price.textContent = `${product.discountedPrice} kr`;
 
+    const addToCartButton = document.createElement("button");
+    addToCartButton.classList.add("btn");
+    addToCartButton.textContent = "Add to Cart";
+
+    addToCartButton.addEventListener("click", () => {
+      addToCart(product);
+
+      addToCartButton.textContent = "Added to Cart";
+
+      setTimeout(() => {
+        addToCartButton.textContent = "Add to Cart";
+      }, 1500);
+    });
+
     imageContainer.appendChild(image);
 
     card.appendChild(imageContainer);
     card.appendChild(title);
+    card.appendChild(price);
 
     productLink.appendChild(card);
-    productLink.appendChild(price);
 
-    productsContainer.appendChild(productLink);
+    productItem.appendChild(productLink);
+    productItem.appendChild(addToCartButton);
+
+    productsContainer.appendChild(productItem);
   });
 }
 
@@ -93,13 +138,15 @@ function filterCategoryProducts() {
 //! ======================================================
 
 async function startApp() {
+  loadCart();
   loading.style.display = "block";
 
   await fetchProducts();
 
-  const filteredProducts = filterCategoryProducts();
-
-  renderProducts(filteredProducts);
+  if (allProducts.length > 0) {
+    const filteredProducts = filterCategoryProducts();
+    renderProducts(filteredProducts);
+  }
 
   loading.style.display = "none";
 }

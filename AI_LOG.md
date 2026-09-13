@@ -10,6 +10,7 @@ AI was used for:
 - Debugging issues in existing HTML, CSS, and JavaScript
 - Checking file paths and project structure
 - Suggesting improvements to navigation and page consistency
+- The Terms and Conditions and Privacy Policy text was created with assistance from ChatGPT.
 
 ## AI tool used
 
